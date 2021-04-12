@@ -2,6 +2,8 @@
 bvid=$(echo $1 | sed 's/\.ass//g')
 cid=$(curl -s -G "http://api.bilibili.com/x/player/pagelist" \
 --data-urlencode "bvid=$bvid" | jq .data[0].cid)
+read csrf < csrf.txt
+read SESSDATA < sessdata.txt
 declare -A dic
 while read line
 do
@@ -30,8 +32,8 @@ do
     --data-urlencode "pool=0" \
     --data-urlencode "mode=4" \
     --data-urlencode "rnd=$rnd" \
-    --data-urlencode "csrf=d9dd9034d238f6386206e2373a6b48f0" \
-    -b "SESSDATA=6f251ee0%2C1630911102%2C39734%2A31" | jq .code)
+    --data-urlencode "csrf=$csrf" \
+    -b "SESSDATA=$SESSDATA" | jq .code)
     echo -e "$t\t$code\t$color\n$msg"
     while (($code != 0))
     do
@@ -46,8 +48,8 @@ do
         --data-urlencode "pool=0" \
         --data-urlencode "mode=4" \
         --data-urlencode "rnd=$rnd" \
-        --data-urlencode "csrf=d9dd9034d238f6386206e2373a6b48f0" \
-        -b "SESSDATA=6f251ee0%2C1630911102%2C39734%2A31" | jq .code)
+        --data-urlencode "csrf=$csrf" \
+        -b "SESSDATA=$SESSDATA" | jq .code)
         echo -e "$t\t$code\t$color\n$msg"
     done
     sleep 10s
